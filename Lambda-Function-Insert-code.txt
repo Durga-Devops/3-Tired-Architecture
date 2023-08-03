@@ -1,0 +1,44 @@
+import json
+import mysql.connector
+
+
+def lambda_handler(event, context):
+    # TODO implement
+    mydb = mysql.connector.connect(
+      host="35.93.49.172",
+      user="durga",
+      password="Durga@123",
+      database="employees"
+    )
+    
+    mycursor = mydb.cursor()
+    if 'EmpName' in event:
+        valEmpName = event['EmpName']
+        print('Value for key1:', valEmpName)
+
+    if 'EmpEmail' in event:
+        valEmpEmail = event['EmpEmail']
+        print('Value for key1:', valEmpEmail)
+        
+    if 'EmpPhone' in event:
+        valEmpPhone = event['EmpPhone']
+        print('Value for key1:', valEmpPhone)        
+
+
+    mycursor.execute("INSERT INTO employees (employee_name, employee_email, employee_phone) VALUES ('"+valEmpName+"','"+valEmpEmail+"','"+valEmpPhone+"');")
+    mydb.commit()
+
+    # Fetch all the rows from the cursor
+    #rows = mycursor.fetchall()
+
+    # Convert the data to a JSON string
+    #json_response = json.dumps(rows)
+
+    # Close the cursor and the database connection
+    mycursor.close()
+    mydb.close()
+    
+    return {
+        'statusCode': 200,
+        'body': "INSERT INTO employees (employee_name, employee_email, employee_phone) VALUES ('"+valEmpName+"','"+valEmpEmail+"','"+valEmpPhone+"');"
+    }

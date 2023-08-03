@@ -1,0 +1,85 @@
+First we neeed to create one ec2 instance with amazon-linux
+we need to install mysql in that server
+
+
+PYTHON 3.9 Installation
+========================
+sudo yum update -y
+sudo yum groupinstall "Development Tools" -y
+sudo yum install openssl-devel bzip2-devel libffi-devel -y
+
+cd /opt
+sudo wget https://www.python.org/ftp/python/3.9.7/Python-3.9.7.tgz
+sudo tar -xzf Python-3.9.7.tgz
+cd Python-3.9.7
+sudo ./configure --enable-optimizations
+sudo make altinstall
+sudo ln -s /usr/local/bin/python3.9 /usr/local/bin/python3
+python3.9 --version
+
+PIP & ZIP FILE
+----------------
+LINK: https://www.geeksforgeeks.org/how-to-install-python-packages-for-aws-lambda-layers/
+sudo yum install python3-pip
+sudo yum install zip
+cd -
+change directory to root folder === cd /
+sudo mkdir -p layer/python/lib/python3.9/site-packages
+sudo pip3 install requests -t layer/python/lib/python3.9/site-packages/
+cd layer
+sudo zip -r mypackage.zip *
+ls === zip file & python folder it should be thier
+
+
+mysql installation
+===================
+LINK: https://tecadmin.net/how-to-install-mysql-8-on-amazon-linux-2/
+
+sudo amazon-linux-extras install epel -y
+sudo yum install https://dev.mysql.com/get/mysql80-community-release-el7-5.noarch.rpm
+sudo yum install mysql-community-server
+sudo systemctl active mysqld
+sudo systemctl start mysqld
+sudo systemctl status mysqld
+sudo cat /var/log/mysqld.log | grep "A temporary password"
+sudo mysql_secure_installation            
+
+CREATE USER WITH PASSWORD WITH GRANT PERMISSIONS(uma, Poori@126)
+=================================================================
+CREATE USER 'uma'@'%' IDENTIFIED BY 'Poori@126';
+GRANT ALL PRIVILEGES ON *.* TO 'your_username'@'%' WITH GRANT OPTION;
+CREATE DATABASE Employees;
+show databases;
+use Employees;
+
+CREATE TABLE employees (
+employee_id INT NOT NULL AUTO_INCREMENT,
+employee_name VARCHAR(30) NOT NULL,
+employee_email VARCHAR(40) NOT NULL,
+employee_phone VARCHAR(20),
+PRIMARY KEY (employee_id)
+);
+
+show tables;
+
+INSERT INTO employees (employee_name, employee_email, employee_phone) VALUES ('Durga', 'durga@3k.com', '987654321'), ('Uma', 'uma@3k.com','7093267984');
+
+select * from employees;
+GRANT ALL PRIVILEGES ON Employees.* TO 'uma'@'%';
+SHOW GRANTS FOR 'uma'@'%';
+SELECT User, Host FROM mysql.user;
+
+Launch Amazon Linux -EC2 Instance
+
+Installation: HTTPD
+sudo yum update
+sudo yum install httpd
+sudo service httpd start
+sudo chkconfig httpd on
+
+After Installing HTTPD:
+change to root user
+check the service status - service httpd status
+cd /var/www/html/
+touch index.html
+vim index.html
