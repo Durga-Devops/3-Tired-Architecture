@@ -3,3 +3,4 @@ third line added
 forth line added
 fifth line added
 sixth line added from feature3
+seventh line added from feature4
