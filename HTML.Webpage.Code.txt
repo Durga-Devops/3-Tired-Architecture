@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Employee Database</title>
+</head>
+
+<body>
+    <h1>Employee Database</h1>
+    <button onclick="getEmployees()">Get Employees</button>
+    <button onclick="addEmployee()">Add Employee</button>
+    <button onclick="deleteEmployee()">Delete Employee</button>
+
+    <div id="output"></div>
+
+    <script>
+		const apiUrl = 'https://s5bgfifwkj.execute-api.us-west-2.amazonaws.com/dev/uma';
+        
+		function getEmployees() {
+            fetch(apiUrl, {
+                    method: 'GET'
+                })
+                .then(response => response.json())
+                .then(data => {
+				    alert('Response from the REST service:\n' + JSON.stringify(data));
+                    const outputDiv = document.getElementById('output');
+                    outputDiv.innerHTML = JSON.stringify(data, null, 2);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function addEmployee() {
+            const employeeName = prompt('Enter Employee Name:');
+            const employeeEmail = prompt('Enter Employee Email:');
+            const employeePhone = prompt('Enter Employee Phone:');
+
+            const data = {
+                EmpName: employeeName,
+                EmpEmail: employeeEmail,
+                EmpPhone: employeePhone
+            };
+
+            fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert("Inserted Employee ["+employeeName+"] Successfully"); // Show a success message or handle the response accordingly
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteEmployee() {
+            const employeeId = prompt('Enter Employee ID to Delete:');
+
+            if (!employeeId) {
+                alert('Employee ID is required.');
+                return;
+            }
+			
+			const data = {
+                EmpID: employeeId  
+            };
+
+            fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })				
+                .then(response => response.json())
+                .then(data => {
+                    alert(JSON.stringify(data, null, 2));
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+
+</html>
